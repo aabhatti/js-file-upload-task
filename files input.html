@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        .container{
+            max-width: 1000px;
+            margin: auto;
+        }
+        .container .show-files{
+            background-color: dodgerblue;
+            padding: 20px;
+        }
+        .container .show-files .file img{
+            width: 50px;
+            height: 30px;
+        }
+    </style>
+
+    <script>
+        function ReadAndDisplay(img,file){
+            var reader = new FileReader();
+            reader.onload = function(e){
+                img.attr("src",e.target.result);
+            }
+            reader.readAsDataURL(file);
+        }
+        $(function (){
+            $("#open_files").click(function (){
+                console.log("click");
+                $("#file_input").click();
+            });
+
+            $("#file_input").change(function (){
+                var files = $("#file_input").get(0).files;
+                if(files.length>0){
+                    for(var i = 0; i<files.length; i++){
+                        var file = files[i];
+                        console.log(file);
+
+                        var $div = $("<div>").addClass("file");
+                        var $img = $("<img>").addClass("fileImage");
+                        var $span = $("<span>").addClass("fileName").text(file["name"]);
+                        $div.append($img);
+                        $div.append($span);
+                        $span = $("<span>").addClass("fileSize").text(file["size"]+"bytes");
+                        $div.append($span);
+                        var link = $("<a>").attr("href","#").addClass("delete").text("X");
+                        $(link).click(function (){
+                            $(this).closest('.file').remove();
+                        });
+                        $div.append(link);
+
+                        $("#file_show_container").append($div);
+
+                        ReadAndDisplay($img,file);
+
+                    }
+                }
+            });
+        });
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Files input</title>
+</head>
+<body>
+    <div class="container">
+       <input type="file" id="file_input" multiple style="display: none;">
+       <input type="button" value="Open Files" id="open_files">
+        
+       <div class="show-files" id="file_show_container">
+
+       </div>
+
+    </div>
+    
+</body>
+</html>
